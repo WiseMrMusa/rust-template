@@ -1,6 +1,27 @@
 name: UB (undefined behavior) detection
 
-on: push
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "LICENSE*"
+      - ".github/workflows/docs.yml"
+      - "katex-header.html"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "LICENSE*"
+      - ".github/workflows/docs.yml"
+      - "katex-header.html"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 env:
   CARGO_TERM_COLOR: always
@@ -16,9 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          rustup +nightly component add miri
-          cargo +nightly miri setup
-          PROPTEST_DISABLE_FAILURE_PERSISTENCE=true \
-            MIRIFLAGS="-Zmiri-env-forward=PROPTEST_DISABLE_FAILURE_PERSISTENCE -Zmiri-strict-provenance" \
-            cargo +nightly miri test --lib
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: miri
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: Run Miri
+        run: MIRIFLAGS="-Zmiri-strict-provenance" cargo +nightly miri test --lib
