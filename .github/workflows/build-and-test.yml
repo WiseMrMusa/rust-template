@@ -44,3 +44,7 @@ jobs:
         run: cargo build --benches --all-features
       - name: Run tests
         run: cargo test --workspace --verbose
+      - name: Build benches
+        run: cargo build --benches --all-features --all-targets
+      - name: Run tests
+        run: cargo test --workspace --verbose
