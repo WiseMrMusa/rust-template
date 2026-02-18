@@ -11,9 +11,13 @@ name: Benchmarks
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: write
@@ -23,13 +27,28 @@ permissions:
 env:
   CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  RUSTUP_MAX_RETRIES: 10
 
 jobs:
   benchmark:
     name: Continuous benchmarking
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-bench-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bench-
 
       # TODO(template) update the bench command if you use a different
       # benchmark harness or need to pass extra flags
@@ -50,10 +69,10 @@ jobs:
         with:
           # TODO(template) update the name to match your project
           name: Benchmark
-          tool: 'cargo'
+          tool: "cargo"
           output-file-path: benchmark-output.txt
           external-data-json-path: ./cache/benchmark-data.json
-          alert-threshold: '130%'
+          alert-threshold: "130%"
           comment-on-alert: true
           fail-on-alert: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -65,11 +84,11 @@ jobs:
         with:
           # TODO(template) update the name to match your project
           name: Rust Template Benchmark
-          tool: 'cargo'
+          tool: "cargo"
           output-file-path: benchmark-output.txt
           gh-pages-branch: gh-pages
           benchmark-data-dir-path: dev/bench
-          alert-threshold: '130%'
+          alert-threshold: "130%"
           comment-on-alert: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
