@@ -69,7 +69,7 @@ jobs:
         with:
           # TODO(template) update the name to match your project
           name: Benchmark
-          tool: "cargo"
+          tool: "criterion"
           output-file-path: benchmark-output.txt
           external-data-json-path: ./cache/benchmark-data.json
           alert-threshold: "130%"
@@ -84,7 +84,7 @@ jobs:
         with:
           # TODO(template) update the name to match your project
           name: Rust Template Benchmark
-          tool: "cargo"
+          tool: "criterion"
           output-file-path: benchmark-output.txt
           gh-pages-branch: gh-pages
           benchmark-data-dir-path: dev/bench

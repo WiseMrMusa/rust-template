@@ -1,0 +1,63 @@
+    Finished `bench` profile [optimized] target(s) in 0.16s
+     Running unittests src/bin/addition.rs (target/release/deps/addition-fa126c1aa49f239a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/release/deps/template_crate-2cbe50dadcac1ec1)
+
+running 4 tests
+test tests::addition_bound_check ... ignored
+test tests::addition_edge_case ... ignored
+test tests::addition_of_bounded ... ignored
+test tests::addition_proptest ... ignored
+
+test result: ok. 0 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/benchmark.rs (target/release/deps/benchmark-32b0b63a53acd575)
+Gnuplot not found, using plotters backend
+Benchmarking add_small_integers valid
+Benchmarking add_small_integers valid: Warming up for 3.0000 s
+Benchmarking add_small_integers valid: Collecting 100 samples in estimated 5.0000 s (6.1B iterations)
+Benchmarking add_small_integers valid: Analyzing
+add_small_integers valid
+                        time:   [825.17 ps 827.48 ps 829.74 ps]
+                        change: [-1.0534% -0.7769% -0.4984%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+
+Benchmarking add_small_integers bound check
+Benchmarking add_small_integers bound check: Warming up for 3.0000 s
+Benchmarking add_small_integers bound check: Collecting 100 samples in estimated 5.0000 s (4.5B iterations)
+Benchmarking add_small_integers bound check: Analyzing
+add_small_integers bound check
+                        time:   [1.0951 ns 1.0977 ns 1.1004 ns]
+                        change: [-1.0440% -0.7332% -0.4399%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+Benchmarking sub_small_integers valid
+Benchmarking sub_small_integers valid: Warming up for 3.0000 s
+Benchmarking sub_small_integers valid: Collecting 100 samples in estimated 5.0000 s (6.1B iterations)
+Benchmarking sub_small_integers valid: Analyzing
+sub_small_integers valid
+                        time:   [822.88 ps 825.16 ps 827.40 ps]
+                        change: [-1.9918% -1.7085% -1.4029%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) low mild
+  2 (2.00%) high mild
+
+Benchmarking sub_small_integers bound check
+Benchmarking sub_small_integers bound check: Warming up for 3.0000 s
+Benchmarking sub_small_integers bound check: Collecting 100 samples in estimated 5.0000 s (6.0B iterations)
+Benchmarking sub_small_integers bound check: Analyzing
+sub_small_integers bound check
+                        time:   [824.80 ps 826.50 ps 828.18 ps]
+                        change: [-1.8074% -1.4830% -1.1346%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
