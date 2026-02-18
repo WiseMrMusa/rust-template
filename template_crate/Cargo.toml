@@ -16,9 +16,14 @@ thiserror = { version = "1.0", default-features = false }
 
 [dev-dependencies]
 proptest = { workspace = true }
+criterion = { version = "0.5", features = ["html_reports"] }
 
 # TODO(template)
 # don't forget to put this at every crate
 # to inherit workspace's lints
+[[bench]]
+name = "benchmark"
+harness = false
+
 [lints]
 workspace = true
