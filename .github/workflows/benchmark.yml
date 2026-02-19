@@ -113,8 +113,7 @@ jobs:
           alert-threshold: "130%"
           comment-on-alert: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          auto-push: false
-
+          auto-push: true
       # Save the freshly-updated benchmark data as the new baseline.
       # The key embeds the run ID so every main run creates a new cache entry;
       # actions/cache would skip saving if the key already existed.
