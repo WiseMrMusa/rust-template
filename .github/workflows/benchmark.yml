@@ -38,6 +38,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@efa25f7f19611383d5b0ccf2d1c8914531636bf9 # stable
+        id: rust-toolchain
+        with:
+          toolchain: stable
+
       - uses: actions/cache@v4
         with:
           path: |
@@ -46,8 +52,9 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ runner.os }}-bench-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-bench-${{ steps.rust-toolchain.outputs.cachekey }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
+            ${{ runner.os }}-bench-${{ steps.rust-toolchain.outputs.cachekey }}-
             ${{ runner.os }}-bench-
 
       # TODO(template) update the bench command if you use a different
@@ -56,12 +63,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cargo bench -p template_crate --bench benchmark -- --output-format bencher 2>&1 | tee benchmark-output.txt
+          cargo bench -p template_crate --bench benchmark -- --output-format bencher 2>/dev/null | tee benchmark-output.txt
 
       # On PRs: restore the most-recent baseline written by a main-branch run.
       # Using only restore-keys (no matching primary key) guarantees we always
       # get the latest entry; the primary key includes the run ID so each main
       # run saves a fresh entry and PRs never hit a stale one.
+      # Note: if no baseline cache exists yet (e.g. the very first PR before any
+      # main-branch run has completed), the restore will miss and no regression
+      # alert will fire. This is expected and benign — the action creates a fresh
+      # data file and the next main-branch run will establish the baseline.
       - name: Restore benchmark baseline
         if: github.event_name == 'pull_request'
         uses: actions/cache/restore@v4
@@ -73,10 +84,10 @@ jobs:
 
       - name: Store benchmark result (PR)
         if: github.event_name == 'pull_request'
-        uses: benchmark-action/github-action-benchmark@v1
+        uses: benchmark-action/github-action-benchmark@4bdcce38c94cec68da58d012ac24b7b1155efe8b # v1
         with:
           # TODO(template) update the name to match your project
-          name: Benchmark
+          name: Rust Template Benchmark
           tool: "cargo"
           output-file-path: benchmark-output.txt
           external-data-json-path: ./cache/benchmark-data.json
@@ -87,14 +98,17 @@ jobs:
 
       # On main: push results to gh-pages for the historical dashboard, then
       # save the updated baseline so future PRs compare against current main.
+      # external-data-json-path writes the latest result into ./cache so the
+      # subsequent save step has data to cache for PR comparisons.
       - name: Store benchmark result (main)
         if: github.event_name == 'push'
-        uses: benchmark-action/github-action-benchmark@v1
+        uses: benchmark-action/github-action-benchmark@4bdcce38c94cec68da58d012ac24b7b1155efe8b # v1
         with:
           # TODO(template) update the name to match your project
           name: Rust Template Benchmark
           tool: "cargo"
           output-file-path: benchmark-output.txt
+          external-data-json-path: ./cache/benchmark-data.json
           gh-pages-branch: gh-pages
           benchmark-data-dir-path: dev/bench
           alert-threshold: "130%"
