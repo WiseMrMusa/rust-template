@@ -38,13 +38,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Build
         run: cargo test --workspace --verbose --no-run
-      - name: Run tests
-        run: cargo test --workspace --verbose
-      - name: Build benches
-        run: cargo build --benches --all-features
-      - name: Run tests
-        run: cargo test --workspace --verbose
-      - name: Build benches
-        run: cargo build --benches --all-features --all-targets
+      - name: Build all targets
+        run: cargo build --workspace --all-features --all-targets
       - name: Run tests
         run: cargo test --workspace --verbose
