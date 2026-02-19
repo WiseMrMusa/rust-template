@@ -53,7 +53,10 @@ jobs:
       # TODO(template) update the bench command if you use a different
       # benchmark harness or need to pass extra flags
       - name: Run benchmarks
-        run: cargo bench -p template_crate --bench benchmark -- --output-format bencher 2>&1 | tee benchmark-output.txt
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo bench -p template_crate --bench benchmark -- --output-format bencher 2>&1 | tee benchmark-output.txt
 
       # On PRs: restore the most-recent baseline written by a main-branch run.
       # Using only restore-keys (no matching primary key) guarantees we always
