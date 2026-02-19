@@ -1,6 +1,6 @@
 [package]
 # TODO(template) rename
-name = "mycrate"
+name = "template_crate"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true
@@ -14,8 +14,16 @@ license.workspace = true
 # code break after upgrades 
 thiserror = { version = "1.0", default-features = false }
 
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+proptest = { workspace = true }
+
 # TODO(template)
 # don't forget to put this at every crate
 # to inherit workspace's lints
+[[bench]]
+name = "benchmark"
+harness = false
+
 [lints]
 workspace = true

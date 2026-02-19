@@ -1,4 +1,24 @@
 # :crab: RUST PROJECT TEMPLATE - TODO(template) PUT PROJECT NAME HERE
+<!--`TODO(template) update each badge with your username and repository name.`-->
+[![Docs](https://github.com/NethermindEth/rust-template/actions/workflows/docs.yml/badge.svg)](https://github.com/NethermindEth/rust-template/actions/workflows/docs.yml)
+[![Lint](https://github.com/NethermindEth/rust-template/actions/workflows/linter.yml/badge.svg)](https://github.com/NethermindEth/rust-template/actions/workflows/linter.yml)
+[![Build](https://github.com/NethermindEth/rust-template/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/NethermindEth/rust-template/actions/workflows/build-and-test.yml)
+[![Dependencies](https://github.com/NethermindEth/rust-template/actions/workflows/dependency-audit.yml/badge.svg)](https://github.com/NethermindEth/rust-template/actions/workflows/dependency-audit.yml)
+[![UB](https://github.com/NethermindEth/rust-template/actions/workflows/ub-detection.yml/badge.svg)](https://github.com/NethermindEth/rust-template/actions/workflows/ub-detection.yml)
+[![Coverage](https://github.com/NethermindEth/rust-template/actions/workflows/coverage.yml/badge.svg)](https://github.com/NethermindEth/rust-template/actions/workflows/coverage.yml)
+<!-- You can replace them with a single badge if you create a main CI file that calls the other workflows
+[![CI](https://github.com/{{USERNAME}}/{{REPOSITORY}}/workflows/CI/badge.svg)](https://github.com/{{USERNAME}}/{{REPOSITORY}}/actions)
+-->
+<!--`TODO(template) update with your rust version`
+If you want to change from stable to Minimum Supported Rust Version (MSRV), replace the badge with:
+![MSRV](https://img.shields.io/badge/rustc-1.70+-ab6000.svg) TODO(template) update specific version
+-->
+![Rust](https://img.shields.io/badge/rust-stable-orange.svg)
+<!--`TODO(template) update license version if needed. Check LICENSE first`-->
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+<!--`TODO(template) update with your crate information. Remove if not needed.`-->
+[![Crates.io](https://img.shields.io/crates/v/{{CRATE_NAME}}.svg)](https://crates.io/crates/{{CRATE_NAME}})
+[![Documentation](https://docs.rs/{{CRATE_NAME}}/badge.svg)](https://docs.rs/{{CRATE_NAME}})
 
 TODO(template) describe the project
 
@@ -100,9 +120,23 @@ Signed commits
 }
 ```
 
+## How to use
+
+Either with "Use this template" green button on Github or, in case of using another git hosting service (or have to avoid referencing this repository), you can use [cargo-generate](https://github.com/cargo-generate/cargo-generate).
+
+```sh
+cargo install cargo-generate
+
+cargo generate --git https://github.com/NethermindEth/rust-template
+```
+
 ## Examples
 
 See [examples](./examples/).
+
+## AI tools disclosure - TODO(template)
+
+The content published here may have been refined/augmented by the use of large language models (LLM), computer programs designed to comprehend and generate human language. However, any output refined/generated with the assistance of such programs has been reviewed, edited and revised by [TODO(template) company name].
 
 ## License
 

@@ -1,0 +1,94 @@
+# TODO(template) this workflow requires a `gh-pages` branch to exist.
+# Create it once with:
+#   git checkout --orphan gh-pages
+#   git reset --hard
+#   git commit --allow-empty -m "init gh-pages"
+#   git push origin gh-pages
+#
+# The benchmark dashboard will be available at:
+#   https://<org>.github.io/<repo>/dev/bench/
+name: Benchmarks
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: write
+  deployments: write
+  pull-requests: write
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  RUSTUP_MAX_RETRIES: 10
+
+jobs:
+  benchmark:
+    name: Continuous benchmarking
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-bench-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bench-
+
+      # TODO(template) update the bench command if you use a different
+      # benchmark harness or need to pass extra flags
+      - name: Run benchmarks
+        run: cargo bench -p template_crate --bench benchmark -- --output-format bencher 2>&1 | tee benchmark-output.txt
+
+      # On PRs: compare against cached baseline to detect regressions
+      - name: Download previous benchmark data
+        if: github.event_name == 'pull_request'
+        uses: actions/cache@v4
+        with:
+          path: ./cache
+          key: ${{ runner.os }}-benchmark
+
+      - name: Store benchmark result (PR)
+        if: github.event_name == 'pull_request'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          # TODO(template) update the name to match your project
+          name: Benchmark
+          tool: "cargo"
+          output-file-path: benchmark-output.txt
+          external-data-json-path: ./cache/benchmark-data.json
+          alert-threshold: "130%"
+          comment-on-alert: true
+          fail-on-alert: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # On main: push results to gh-pages for the historical dashboard
+      - name: Store benchmark result (main)
+        if: github.event_name == 'push'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          # TODO(template) update the name to match your project
+          name: Rust Template Benchmark
+          tool: "cargo"
+          output-file-path: benchmark-output.txt
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: dev/bench
+          alert-threshold: "130%"
+          comment-on-alert: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: false

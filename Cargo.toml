@@ -1,19 +1,20 @@
 
 # TODO(template) update for the crate name
 [workspace]
-members = ["examples", "mycrate"]
-resolver = "2"
-default-members = ["mycrate"]
+members = ["examples", "template_crate"]
+resolver = "3"
+default-members = ["template_crate"]
 
 [workspace.package]
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 # TODO(template) update for your repository
 repository = "https://github.com/NethermindEth/rust-template"
 license = "Apache-2.0" # TODO(template) update license if needed
 publish = false
 
 [workspace.dependencies]
+proptest = "1"
 
 [workspace.lints.rust]
 missing_docs = "deny"
